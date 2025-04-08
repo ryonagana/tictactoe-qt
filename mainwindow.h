@@ -30,6 +30,11 @@ public:
     QVector<TButton*>& getButtonList();
     QString getVersion() const;
 
+    //debug functions
+    void debugCrossWin();
+    void debugCircleWin();
+    void debugNoWin();
+
 private slots:
     void menuClick_NewGame();
 

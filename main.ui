@@ -82,7 +82,7 @@
      <x>0</x>
      <y>0</y>
      <width>481</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuArquivo">
@@ -98,8 +98,17 @@
     </property>
     <addaction name="acAboutQT"/>
    </widget>
+   <widget class="QMenu" name="menuDebug">
+    <property name="title">
+     <string>Debug</string>
+    </property>
+    <addaction name="acCircle_Wins"/>
+    <addaction name="acCross_Wins"/>
+    <addaction name="acNo_Wins"/>
+   </widget>
    <addaction name="menuArquivo"/>
    <addaction name="menuAbout"/>
+   <addaction name="menuDebug"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="acQuit">
@@ -115,6 +124,21 @@
   <action name="acNewGame">
    <property name="text">
     <string>New Game</string>
+   </property>
+  </action>
+  <action name="acCircle_Wins">
+   <property name="text">
+    <string>Circle Win</string>
+   </property>
+  </action>
+  <action name="acCross_Wins">
+   <property name="text">
+    <string>Cross Win</string>
+   </property>
+  </action>
+  <action name="acNo_Wins">
+   <property name="text">
+    <string>No one Win</string>
    </property>
   </action>
  </widget>

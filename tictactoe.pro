@@ -12,6 +12,8 @@ QMAKE_CXXFLAGS_RELEASE += -s -Wall -Werror -O3
 QMAKE_CXXFLAGS_DEBUG +=  -Wall -Wextra -Werror  -g
 
 
+DEFINES += TTT_DEBUG
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \

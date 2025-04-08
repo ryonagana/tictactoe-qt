@@ -16,6 +16,11 @@ public:
     static constexpr int GRID_W = 3;
     static constexpr int GRID_H = 3;
 
+    enum GameState {
+        PLAY = 1,
+        END  = 2
+    };
+
     TicTacToe(QWidget* parent);
     void Init();
     void StartNewGame();
@@ -32,6 +37,14 @@ public:
     bool checkGridVictory(TButton::ButtonType player);
     void clearAllCells();
     QString buttonTypeToStr(TButton::ButtonType player);
+    void setVictory(bool value);
+    bool getVictory() const;
+    void setGameOver(bool value);
+    bool getGameOver() const;
+    void setDebug(bool value);
+    QVector<TButton::ButtonType>& getButtonGrid();
+
+    GameState playAgainMessageBox();
 private slots:
     void buttonClick();
 
@@ -43,7 +56,6 @@ private slots:
 
  private:
    MainWindow* parent;
-
    uint32_t p1_score;
    uint32_t p2_score;
    TButton::ButtonType startPlayer;
@@ -54,6 +66,8 @@ private slots:
    QTimer *timer;
    bool gameover;
    bool victory;
+   GameState gameState;
+   bool debug_mode;
 };
 
 #endif // TICTACTOE_H

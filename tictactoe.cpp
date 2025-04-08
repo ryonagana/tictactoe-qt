@@ -17,7 +17,7 @@ void TicTacToe::Init()
 {
     timer = new QTimer(parent);
     QObject::connect(timer, &QTimer::timeout, this, &TicTacToe::updateGrid);
-    timer->start(50);
+    timer->start(200);
 
     for(auto& btn : this->buttonList){
         QObject::connect(btn, &QToolButton::clicked, this, &TicTacToe::buttonClick);
@@ -55,7 +55,7 @@ void TicTacToe::setButtonContent(TButton *button)
             break;
 
         case TButton::ButtonType::NONE:
-            button->setText("N");
+            button->setText("");
             break;
     }
 }
@@ -66,48 +66,47 @@ void TicTacToe::updateGrid()
        this->setButtonContent(btn);
     }
 
-    if(!gameover){
+    if(!gameover && !victory){
         if(countUnusedCells() <= 0){
-            QMessageBox::warning(nullptr, "Game Over", "Game Over Baby!");
             gameover = true;
             disableAllCells();
             clearAllCells();
-            return;
         }
-
-        /*
-        if(checkGridVictory(lastPlayer) && !victory ){
-            QString message;
-
-            message.append(buttonTypeToStr(lastPlayer).append(" WON!!"));
-            QMessageBox::warning(nullptr, "Victory", message);
-            victory = true;
-            gameover = true;
-            disableAllCells();
-            clearAllCells();
-            return;
-        }
-        */
-
-        if(checkGridVictory(lastPlayer) && !victory && lastPlayer != TButton::ButtonType::NONE){
-            QString message;
-            message.append(buttonTypeToStr(lastPlayer).append(" WON!!"));
-            QMessageBox::warning(nullptr, "Victory", message);
-            victory = true;
-            gameover = true;
-            disableAllCells();
-            clearAllCells();
-            return;
-        }
-
     }
 
+    if(!gameover && !victory){
+
+        if((checkGridVictory(lastPlayer)) && (lastPlayer != TButton::ButtonType::NONE)){
+            QString message;
+            message.append(buttonTypeToStr(lastPlayer).append(" WON!!"));
+            QMessageBox::warning(nullptr, "Victory", message);
+            GameState state =  playAgainMessageBox();
+
+            if(state == GameState::END){
+                gameover = true;
+                victory = false;
+                disableAllCells();
+                clearAllCells();
+                return;
+            }
+
+            if(state == GameState::PLAY){
+                gameover = false;
+                victory = false;
+                disableAllCells();
+                clearAllCells();
+                StartNewGame();
+                return;
+            }
+        }
+    }
 
 }
 
 void TicTacToe::setStarter(TButton::ButtonType tp)
 {
     this->startPlayer = tp;
+    this->lastPlayer = tp;
 }
 
 TButton::ButtonType TicTacToe::isPlayingNow() const
@@ -232,6 +231,65 @@ QString TicTacToe::buttonTypeToStr(TButton::ButtonType player)
     return txt;
 }
 
+void TicTacToe::setVictory(bool value)
+{
+    victory = value;
+}
+
+bool TicTacToe::getVictory() const
+{
+    return victory;
+}
+
+void TicTacToe::setGameOver(bool value)
+{
+    gameover = value;
+}
+
+bool TicTacToe::getGameOver() const
+{
+    return gameover;
+}
+
+void TicTacToe::setDebug(bool value)
+{
+    this->debug_mode = value;
+}
+
+QVector<TButton::ButtonType> &TicTacToe::getButtonGrid()
+{
+    return buttonGrid;
+}
+
+TicTacToe::GameState TicTacToe::playAgainMessageBox()
+{
+    QMessageBox msgbox;
+    GameState state = GameState::END;
+
+    msgbox.setWindowTitle("Confirm:");
+    msgbox.setText("Game Over Baby!\n Wanna Try Again?");
+    msgbox.setIcon(QMessageBox::Question);
+    msgbox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+
+    int response = msgbox.exec();
+
+    switch(response){
+    case QMessageBox::Ok:
+        this->SetStarterRandom();
+        this->StartNewGame();
+        state  = GameState::PLAY;
+        break;
+
+    case QMessageBox::Cancel:
+        gameover = true;
+        disableAllCells();
+        clearAllCells();
+        state = GameState::END;
+        break;
+    }
+    return state;
+}
+
 
 
 void TicTacToe::buttonClick()
@@ -257,8 +315,10 @@ void TicTacToe::buttonClick()
             button->setEnabled(false);
         }
 
-        game_count++;
-        switchPlayer();
+        if(!debug_mode){
+            game_count++;
+            switchPlayer();
+        }
         this->updateGrid();
 
     }

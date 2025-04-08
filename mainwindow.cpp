@@ -40,6 +40,9 @@ void MainWindow::Init()
     this->ttt = new TicTacToe(this);
 
     this->ttt->Init();
+    //this->ttt->setVictory(false);
+    //this->ttt->setGameOver(true);
+    //this->ttt->disableAllCells();
     this->ttt->StartNewGame();
     this->ttt->SetStarterRandom();
 
@@ -48,8 +51,17 @@ void MainWindow::Init()
     connect(this->ui->acAboutQT, &QAction::triggered, this, &QApplication::aboutQt);
     connect(this->ui->acQuit, &QAction::triggered, this, &QApplication::quit);
 
+
+    connect(this->ui->acCross_Wins, &QAction::triggered, this, &MainWindow::debugCrossWin);
+    connect(this->ui->acCircle_Wins, &QAction::triggered, this, &MainWindow::debugCircleWin);
+    connect(this->ui->acNo_Wins, &QAction::triggered, this, &MainWindow::debugNoWin);
+
     this->ui->lcdPlayer1->setDigitCount(6);
     this->ui->lcdPlayer2->setDigitCount(6);
+    this->ui->menuDebug->hide();
+#ifdef TTTDEBUG
+    this->ui->menuDebug->setVisible(true);
+#endif
 
 }
 
@@ -77,6 +89,80 @@ QString MainWindow::getVersion() const
     return ver;
 }
 
+void MainWindow::debugCrossWin()
+{
+    QVector<TButton::ButtonType>& grid =  this->ttt->getButtonGrid();
+
+    this->ttt->setDebug(true);
+    this->ttt->setStarter( TButton::ButtonType::CROSS);
+    grid[0] = TButton::ButtonType::CROSS;
+    grid[4] = TButton::ButtonType::CROSS;
+    grid[8] = TButton::ButtonType::CROSS;
+
+    this->buttonList[0]->setButtonType(TButton::ButtonType::CROSS);
+    this->buttonList[0]->click();
+    this->buttonList[4]->setButtonType(TButton::ButtonType::CROSS);
+    this->buttonList[4]->click();
+    this->buttonList[8]->setButtonType(TButton::ButtonType::CROSS);
+    this->buttonList[8]->click();
+    this->ttt->setDebug(false);
+
+
+}
+
+void MainWindow::debugCircleWin()
+{
+    QVector<TButton::ButtonType>& grid =  this->ttt->getButtonGrid();
+
+    this->ttt->setDebug(true);
+    this->ttt->setStarter( TButton::ButtonType::CIRCLE);
+    grid[0] = TButton::ButtonType::CIRCLE;
+    grid[4] = TButton::ButtonType::CIRCLE;
+    grid[8] = TButton::ButtonType::CIRCLE;
+
+    this->buttonList[0]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[0]->click();
+    this->buttonList[4]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[4]->click();
+    this->buttonList[8]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[8]->click();
+    this->ttt->setDebug(false);
+
+
+}
+
+void MainWindow::debugNoWin()
+{
+    QVector<TButton::ButtonType>& grid =  this->ttt->getButtonGrid();
+
+    this->ttt->setDebug(true);
+    this->ttt->setStarter( TButton::ButtonType::CIRCLE);
+    grid[0] = TButton::ButtonType::CIRCLE;
+    grid[1] = TButton::ButtonType::CROSS;
+    grid[2] = TButton::ButtonType::CIRCLE;
+    grid[3] = TButton::ButtonType::CIRCLE;
+    grid[4] = TButton::ButtonType::CROSS;
+    grid[5] = TButton::ButtonType::CIRCLE;
+    grid[6] = TButton::ButtonType::CROSS;
+    grid[7] = TButton::ButtonType::CROSS;
+    grid[8] = TButton::ButtonType::CIRCLE;
+
+    this->buttonList[0]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[0]->click();
+    this->buttonList[4]->setButtonType(TButton::ButtonType::CROSS);
+    this->buttonList[4]->click();
+    this->buttonList[8]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[8]->click();
+
+    this->buttonList[2]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[2]->click();
+    this->buttonList[4]->setButtonType(TButton::ButtonType::CROSS);
+    this->buttonList[4]->click();
+    this->buttonList[6]->setButtonType(TButton::ButtonType::CIRCLE);
+    this->buttonList[6]->click();
+    this->ttt->setDebug(false);
+}
+
 void MainWindow::menuClick_NewGame()
 {
     qDebug() << "NEW GAME CLICKED!";
@@ -94,27 +180,30 @@ void MainWindow::menuClick_NewGame()
 
                     int id = group->id(checked);
 
-                    if(id <= 0){
-                        QMessageBox::critical(dialog, "Error", "Please Choose One Starter");
-                        return;
-                    }
 
                     switch(id){
                         case 1:
                             this->ttt->setStarter(TButton::ButtonType::CROSS);
+                            ttt->StartNewGame();;
                             break;
                         case 2:
                             this->ttt->setStarter(TButton::ButtonType::CIRCLE);
+                            ttt->StartNewGame();;
                             break;
                         case 3:
                             this->ttt->SetStarterRandom();
+                            ttt->StartNewGame();;
                             break;
+                        default:
+                            QMessageBox::critical(dialog, "Error", "Please Choose One Starter");
+                            break;
+
                     }
 
                 }
             }
 
-            ttt->StartNewGame();;
+
         break;
 
         case QDialog::Rejected:
