@@ -59,8 +59,8 @@ void MainWindow::Init()
     this->ui->lcdPlayer1->setDigitCount(6);
     this->ui->lcdPlayer2->setDigitCount(6);
     this->ui->menuDebug->hide();
-#ifdef TTTDEBUG
-    this->ui->menuDebug->setVisible(true);
+#ifdef TTT_DEBUG
+    this->ui->menuDebug->show();
 #endif
 
 }
@@ -112,6 +112,7 @@ void MainWindow::debugCrossWin()
 
 void MainWindow::debugCircleWin()
 {
+    this->ttt->StartNewGame();
     QVector<TButton::ButtonType>& grid =  this->ttt->getButtonGrid();
 
     this->ttt->setDebug(true);
