@@ -5,6 +5,7 @@
 #include "tbutton.h"
 #include <QVector>
 #include <QObject>
+#include <QMap>
 
 class MainWindow;
 
@@ -22,6 +23,7 @@ public:
     };
 
     TicTacToe(QWidget* parent);
+    ~TicTacToe();
     void Init();
     void StartNewGame();
     void setButtonContent(TButton *button);
@@ -43,8 +45,8 @@ public:
     bool getGameOver() const;
     void setDebug(bool value);
     QVector<TButton::ButtonType>& getButtonGrid();
-
     GameState playAgainMessageBox();
+    void loadImages();
 private slots:
     void buttonClick();
 
@@ -68,6 +70,8 @@ private slots:
    bool victory;
    GameState gameState;
    bool debug_mode;
+   QMap<QString,QIcon*> imageList;
+
 };
 
 #endif // TICTACTOE_H

@@ -19,6 +19,7 @@ void TButton::Start()
     this->setFixedSize(200,200);
     this->setCheckable(false);
 
+
 }
 
 void TButton::setButtonType(ButtonType type)

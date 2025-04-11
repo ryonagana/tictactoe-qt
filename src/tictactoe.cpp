@@ -13,6 +13,24 @@ TicTacToe::TicTacToe(QWidget* parent):
 
 }
 
+TicTacToe::~TicTacToe()
+{
+    for(auto img : imageList){
+        delete img;
+    }
+}
+
+void TicTacToe::loadImages()
+{
+
+
+    imageList.insert("cross.png", new QIcon(":/images/cross.png"));
+    imageList.insert("circle.png", new QIcon(":/images/circle.png"));
+
+
+
+}
+
 void TicTacToe::Init()
 {
     timer = new QTimer(parent);
@@ -22,6 +40,9 @@ void TicTacToe::Init()
     for(auto& btn : this->buttonList){
         QObject::connect(btn, &QToolButton::clicked, this, &TicTacToe::buttonClick);
     }
+
+    loadImages();
+
 }
 
 void TicTacToe::StartNewGame()
@@ -47,15 +68,16 @@ void TicTacToe::setButtonContent(TButton *button)
 {
     switch(button->getButtonType()){
         case TButton::ButtonType::CROSS:
-            button->setText("X");
+            button->setIcon(*imageList["cross.png"]);
             break;
 
         case TButton::ButtonType::CIRCLE:
-            button->setText("O");
+            button->setIcon(*imageList["circle.png"]);
             break;
 
         case TButton::ButtonType::NONE:
-            button->setText("");
+            QIcon emptyIcon;
+              button->setIcon(emptyIcon);
             break;
     }
 }
@@ -303,6 +325,8 @@ QVector<TButton::ButtonType> &TicTacToe::getButtonGrid()
     return buttonGrid;
 }
 
+
+
 TicTacToe::GameState TicTacToe::playAgainMessageBox()
 {
 
@@ -343,10 +367,6 @@ void TicTacToe::buttonClick()
 {
     QObject *senderObject = sender();
     TButton *button = static_cast<TButton*>(senderObject);
-    qDebug() << countUnusedCells();
-
-
-
 
     if(button){
         int x =  button->getIndex() % GRID_W;
@@ -366,8 +386,6 @@ void TicTacToe::buttonClick()
             game_count++;
             switchPlayer();
         }
-        this->updateGrid();
-
     }
 }
 

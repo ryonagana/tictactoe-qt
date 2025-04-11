@@ -8,32 +8,42 @@ CONFIG += c++23
 # In order to do so, uncomment the following line.
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-QMAKE_CXXFLAGS_RELEASE += -s -Wall -Werror -O3
-QMAKE_CXXFLAGS_DEBUG +=  -Wall -Wextra -Werror  -g
+unix {
+    QMAKE_CXXFLAGS_RELEASE += -s -Wall -Werror -O2
+    QMAKE_CXXFLAGS_DEBUG +=  -Wall -Wextra -Werror -g
+}
+
+win32{
+    QMAKE_CXXFLAGS_RELEASE += -s -Wall -Werror -O3
+    QMAKE_CXXFLAGS_DEBUG +=  -Wall -Wextra -Werror -g
+}
 
 
 DEFINES += TTT_DEBUG
 
 SOURCES += \
-    main.cpp \
-    mainwindow.cpp \
-    newgamedialog.cpp \
-    tbutton.cpp \
-    tictactoe.cpp
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/newgamedialog.cpp \
+    src/tbutton.cpp \
+    src/tictactoe.cpp
 
 HEADERS += \
-    mainwindow.h \
-    newgamedialog.h \
-    tbutton.h \
-    tictactoe.h
+    src/mainwindow.h \
+    src/newgamedialog.h \
+    src/tbutton.h \
+    src/tictactoe.h
 
 FORMS += \
-    main.ui
+    src/main.ui
 
 TRANSLATIONS += \
-    tictactoe_pt_BR.ts
+    src/tictactoe_pt_BR.ts
 CONFIG += lrelease
 CONFIG += embed_translations
+
+RESOURCES += \
+    src/resources.qrc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
